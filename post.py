@@ -27,7 +27,7 @@ class Post:
         """
         response = RequestsApi.get_something(f"posts?id={self.post['id']}")
         print(textwrap.dedent(f"""
-                                    id of the user: {response['data'][0]['id']}
+                                    id: {response['data'][0]['id']}
                                     User_id: {response['data'][0]['user_id']}
                                     Title: {response['data'][0]['title']}
                                     Body: {response['data'][0]['body']}"""))
@@ -36,7 +36,7 @@ class Post:
     def get_id_by_title(title):
         """
         Makes a get request and returns the id of the instance
-        :param title: name of the instance
+        :param title: title of the instance
         :return: id of the instance
         """
         endpoint = f"posts?title={title}"
@@ -44,6 +44,11 @@ class Post:
         return response['data'][0]['id']
 
     def create_comment(self, json_data):
+        """
+        Creates a comment instance
+        :param json_data: comment body
+        :return:
+        """
         json_data['post_id'] = self.post['id']
         self.comment = Comment(json_data)
         self.comments.append(self.comment)

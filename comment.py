@@ -6,11 +6,10 @@ class Comment:
 
     def __init__(self, comment_dict):
         self.comment = {'id': comment_dict['id'],
-                     'post_id': comment_dict['post_id'],
-                     'name': comment_dict['name'],
-                     'email': comment_dict['email'],
-                     'body': comment_dict['body']}
-
+                        'post_id': comment_dict['post_id'],
+                        'name': comment_dict['name'],
+                        'email': comment_dict['email'],
+                        'body': comment_dict['body']}
 
     def post_comment(self):
         """
@@ -37,7 +36,7 @@ class Comment:
     def get_id_by_name(name):
         """
         Makes a get request and returns the id of the instance
-        :param title: name of the instance
+        :param name: name of the instance
         :return: id of the instance
         """
         endpoint = f"comments?name={name}"

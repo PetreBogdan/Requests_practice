@@ -1,8 +1,8 @@
-import pprint
 import textwrap
 
 from requestapi import RequestsApi
 from post import Post
+from todo import Todo
 
 
 class User:
@@ -14,10 +14,11 @@ class User:
                      'gender': user_dict['gender'],
                      'status': user_dict['status']}
         self.posts = []
+        self.todos = []
 
     def post_user(self):
         """
-        Make a post request and of the instance created
+        Make a post request of the instance created
         :return:
         """
         RequestsApi.post_something(self.user, 'users')
@@ -45,7 +46,7 @@ class User:
 
     def display_instance(self):
         """
-        Displays attributes of the instance created
+        Displays the instance created from get
         :return:
         """
         response = RequestsApi.get_something(f"users?id={self.user['id']}")
@@ -54,7 +55,7 @@ class User:
     @staticmethod
     def display_user_by_id(id_user):
         """
-        Displays the data of the user from a get request
+        Displays the data of the non created user from a get request by id
         :param id_user: the id of the user
         :return:
         """
@@ -96,7 +97,7 @@ class User:
     @staticmethod
     def display_users_middle_name(nr_users):
         """
-        Displays the users thats have a middle name
+        Displays the users that have a middle name
         :param nr_users: how many users
         :return:
         """
@@ -120,3 +121,25 @@ class User:
         json_data['user_id'] = self.user['id']
         self.post = Post(json_data)
         self.posts.append(self.post)
+
+    def create_todo(self, json_data):
+        """
+        Creates a to do for an user
+        :param json_data: the body of the to do
+        :return:
+        """
+        json_data['user_id'] = self.user['id']
+        self.todo = Todo(json_data)
+        self.todos.append(self.todo)
+
+    def modify_email(self, email):
+        """
+        Changes the email of an user with a patch request
+        :param email: the email modified
+        :return: Display the data with the modified email
+        """
+        json_data = {'email': email}
+        response = RequestsApi.patch_something(f"users/{self.user['id']}", json_data)
+        if response == 200:
+            self.user['email'] = email
+        self.display_instance()
