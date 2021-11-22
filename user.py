@@ -2,6 +2,7 @@ import pprint
 import textwrap
 
 from requestapi import RequestsApi
+from post import Post
 
 
 class User:
@@ -12,8 +13,8 @@ class User:
                      'email': user_dict['email'],
                      'gender': user_dict['gender'],
                      'status': user_dict['status']}
+        self.posts = []
 
-    # Creating a new user
     def post_user(self):
         """
         Make a post request and of the instance created
@@ -22,7 +23,6 @@ class User:
         RequestsApi.post_something(self.user, 'users')
         self.user['id'] = User.get_id_by_name(self.user['name'])
 
-    # Searching for a specific user by name and returns ID
     @staticmethod
     def get_id_by_name(name):
         """
@@ -34,7 +34,6 @@ class User:
         response = RequestsApi.get_something(endpoint)
         return response['data'][0]['id']
 
-    # Returns number of users to verify the new added user
     @staticmethod
     def number_of_users():
         """
@@ -43,13 +42,6 @@ class User:
         """
         response = RequestsApi.get_something('users')
         return response['meta']['pagination']['total']
-
-    # @staticmethod
-    # def get_something_by_name(name):
-    #     url = f"https://gorest.co.in/public/v1/users?name={name}"
-    #     response = requests.get(url, verify=False, headers=RequestsApi.headers)
-    #     print(f"Request response: {response.status_code}")
-    #     return response.json()['data'][0]['id']
 
     def display_instance(self):
         """
@@ -103,6 +95,11 @@ class User:
 
     @staticmethod
     def display_users_middle_name(nr_users):
+        """
+        Displays the users thats have a middle name
+        :param nr_users: how many users
+        :return:
+        """
         while nr_users > 0:
             page = 1
             response = RequestsApi.get_something(f"users?page={page}")
@@ -113,3 +110,13 @@ class User:
                     if nr_users == 0:
                         break
             page += 1
+
+    def create_post(self, json_data):
+        """
+        Creates a post for an user
+        :param json_data: the body of the post
+        :return:
+        """
+        json_data['user_id'] = self.user['id']
+        self.post = Post(json_data)
+        self.posts.append(self.post)
