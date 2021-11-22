@@ -94,5 +94,6 @@ class Todo:
             for todo in range(nr):
                 # Todo._display_todo(response['data'][todo])
                 todos.append(response['data'][todo])
+        # return todos
         for todo in sorted(todos, key=lambda x: datetime.strptime(x['due_on'], '%Y-%m-%dT%H:%M:%S.%f%z')):
             Todo._display_todo(todo)
