@@ -1,47 +1,32 @@
 from requestapi import RequestsApi
 from comment import Comment
-import textwrap
+from apientity import Entity
 
 
-class Post:
+class Post(Entity):
 
     def __init__(self, post_dict):
-        self.post = {'id': post_dict['id'],
-                     'user_id': post_dict['user_id'],
-                     'title': post_dict['title'],
-                     'body': post_dict['body']}
+        try:
+            self.post = {'id': post_dict['id'],
+                         'user_id': post_dict['user_id'],
+                         'title': post_dict['title'],
+                         'body': post_dict['body']}
+        finally:
+            RequestsApi.post_request(post_dict, "posts")
+            self.update_post()
         self.comments = []
 
-    def post_post(self):
-        """
-        Post the post
-        :return:
-        """
-        RequestsApi.post_something(self.post, 'posts')
-        self.post['id'] = Post.get_id_by_title(self.post['title'])
-
-    def display_post(self):
-        """
-        Get the body from API and displays nice formatted data
-        :return:
-        """
-        response = RequestsApi.get_something(f"posts?id={self.post['id']}")
-        print(textwrap.dedent(f"""
-                                    id: {response['data'][0]['id']}
-                                    User_id: {response['data'][0]['user_id']}
-                                    Title: {response['data'][0]['title']}
-                                    Body: {response['data'][0]['body']}"""))
+    def update_post(self):
+        endpoint = f"posts?title={self.post['title']}"
+        response = RequestsApi.get_request(endpoint)
+        self.post['id'] = response['data'][0]['id']
+        self.post['user_id'] = response['data'][0]['user_id']
+        self.post['title'] = response['data'][0]['title']
+        self.post['body'] = response['data'][0]['body']
 
     @staticmethod
-    def get_id_by_title(title):
-        """
-        Makes a get request and returns the id of the instance
-        :param title: title of the instance
-        :return: id of the instance
-        """
-        endpoint = f"posts?title={title}"
-        response = RequestsApi.get_something(endpoint)
-        return response['data'][0]['id']
+    def display_post_by_id(post_id):
+        Post.display_entity_by_id("posts", post_id)
 
     def create_comment(self, json_data):
         """
@@ -52,3 +37,11 @@ class Post:
         json_data['post_id'] = self.post['id']
         self.comment = Comment(json_data)
         self.comments.append(self.comment)
+
+    def display_post(self):
+        """
+        Displays the instance created from get
+        :return:
+        """
+        response = RequestsApi.get_request(f"posts?id={self.post['id']}")
+        Post.display_entity(response['data'][0])

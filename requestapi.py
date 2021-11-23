@@ -8,27 +8,26 @@ class RequestsApi:
     headers = {'Authorization': f'Bearer {token}'}
 
     @staticmethod
-    def get_something(endpoint):
+    def get_request(endpoint):
         url = f"https://gorest.co.in/public/v1/{endpoint}"
         response = requests.get(url, verify=False, headers=RequestsApi.headers)
         response.raise_for_status()
         return response.json()
 
     @staticmethod
-    def post_something(data, endpoint): #todo rename
+    def post_request(data, endpoint): #todo rename
         url = f"https://gorest.co.in/public/v1/{endpoint}"
         response = requests.post(url, data=data, verify=False, headers=RequestsApi.headers)
         response.raise_for_status()
 
     @staticmethod
-    def delete_something(endpoint):
+    def delete_request(endpoint):
         url = f"https://gorest.co.in/public/v1/{endpoint}"
         response = requests.delete(url, verify=False, headers=RequestsApi.headers)
         response.raise_for_status()
 
     @staticmethod
-    def patch_something(endpoint, data):
+    def patch_request(endpoint, data):
         url = f"https://gorest.co.in/public/v1/{endpoint}"
         response = requests.patch(url, data=data, verify=False, headers=RequestsApi.headers)
         response.raise_for_status()
-        return response.status_code   # posibil sa schimbam
