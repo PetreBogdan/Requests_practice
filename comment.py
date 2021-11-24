@@ -12,13 +12,16 @@ class Comment(Entity):
                             'email': comment_dict['email'],
                             'body': comment_dict['body']}
         finally:
-            RequestsApi.post_request(comment_dict, "comments")
-            self.update_comment()
+            response = RequestsApi.post_request(comment_dict, "comments")
+            self.comment['id'] = response['data']['id']
 
     def update_comment(self):
-        endpoint = f"comment?name={self.comment['name']}"
+        """
+        Makes an update of the attributes from id
+        :return:
+        """
+        endpoint = f"comment?id={self.comment['id']}"
         response = RequestsApi.get_request(endpoint)
-        self.comment['id'] = response['data'][0]['id']
         self.comment['post_id'] = response['data'][0]['post_id']
         self.comment['name'] = response['data'][0]['name']
         self.comment['email'] = response['data'][0]['email']
@@ -26,7 +29,7 @@ class Comment(Entity):
 
     def display_comment(self):
         """
-        Get the body from API and displays nice formatted data
+        Displays the comment entity from id attribute
         :return:
         """
         response = RequestsApi.get_request(f"comments?id={self.comment['id']}")
@@ -34,6 +37,9 @@ class Comment(Entity):
 
     @staticmethod
     def display_comment_by_id(id_comment):
+        """
+        Displays any comment by id form the API
+        :param id_comment:
+        :return:
+        """
         Comment.display_entity_by_id("comments", id_comment)
-
-

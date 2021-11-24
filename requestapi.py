@@ -19,6 +19,7 @@ class RequestsApi:
         url = f"https://gorest.co.in/public/v1/{endpoint}"
         response = requests.post(url, data=data, verify=False, headers=RequestsApi.headers)
         response.raise_for_status()
+        return response.json()
 
     @staticmethod
     def delete_request(endpoint):

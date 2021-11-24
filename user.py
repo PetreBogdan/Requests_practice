@@ -1,4 +1,3 @@
-import textwrap
 from apientity import Entity
 from requestapi import RequestsApi
 from post import Post
@@ -15,15 +14,14 @@ class User(Entity):
                          'gender': user_dict['gender'],
                          'status': user_dict['status']}
         finally:
-            RequestsApi.post_request(user_dict, 'users')
-            self.update_user()
+            response = RequestsApi.post_request(user_dict, 'users')
+            self.user['id'] = response['data']['id']
             self.posts = []
             self.todos = []
 
     def update_user(self):
-        endpoint = f"users?name={self.user['name']}"
+        endpoint = f"users?id={self.user['id']}"
         response = RequestsApi.get_request(endpoint)
-        self.user['id'] = response['data'][0]['id']
         self.user['name'] = response['data'][0]['name']
         self.user['email'] = response['data'][0]['email']
         self.user['gender'] = response['data'][0]['gender']
@@ -124,4 +122,3 @@ class User(Entity):
 
     def delete_user(self):
         RequestsApi.delete_request(f"users/{self.user['id']}")
-

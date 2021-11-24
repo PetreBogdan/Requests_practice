@@ -1,7 +1,7 @@
 from requestapi import RequestsApi
-import textwrap
 from datetime import datetime
 from apientity import Entity
+import textwrap
 
 
 class Todo(Entity):
@@ -14,13 +14,16 @@ class Todo(Entity):
                          'due_on': Todo.format_date_in(todo_dict['due_on']),
                          'status': todo_dict['status']}
         finally:
-            RequestsApi.post_request(todo_dict, 'posts')
-            self.update_todo()
+            response = RequestsApi.post_request(todo_dict, 'todos')
+            self.todo['id'] = response['data']['id']
 
     def update_todo(self):
-        endpoint = f"todo?title={self.todo['title']}"
+        """
+        Makes an update of the attributes from id
+        :return:
+        """
+        endpoint = f"todo?id={self.todo['id']}"
         response = RequestsApi.get_request(endpoint)
-        self.todo['id'] = response['data'][0]['id']
         self.todo['user_id'] = response['data'][0]['user_id']
         self.todo['title'] = response['data'][0]['title']
         self.todo['due_on'] = response['data'][0]['due_on']
@@ -28,7 +31,7 @@ class Todo(Entity):
 
     def display_todo(self):
         """
-        Get the body from API and calls display method
+        Displays the to do entity with the internal id
         :return:
         """
         response = RequestsApi.get_request(f"todos?id={self.todo['id']}")
@@ -57,11 +60,11 @@ class Todo(Entity):
         return dateobj
 
     @staticmethod
-    def get_todo_sorted_list(how_many):
+    def displays_todo_sorted_list(how_many):
         """
-        Get the list of to do items and returns them sorted by due date
+        Displays the list of to do items and returns them sorted by due date
         :param how_many: How many to do items
-        :return: To do items sorted by due date
+        :return:
         """
         url = 'todos?page='
         todos = Todo.get_list_of_entities(how_many, url)
@@ -70,4 +73,18 @@ class Todo(Entity):
 
     @staticmethod
     def display_todo_by_id(todo_id):
+        """
+        Displays any to do entity from API by id
+        :param todo_id: id of the entity
+        :return:
+        """
         Todo.display_entity_by_id("todos", todo_id)
+
+    @staticmethod
+    def display_entity(dictionary):
+        print(textwrap.dedent(f"""\
+                            id: {dictionary['id']}
+                            user_id: {dictionary['user_id']}
+                            title: {dictionary['title']}
+                            due_on: {Todo.format_date_out(dictionary['due_on'])}
+                            status: {dictionary['status']}"""))
