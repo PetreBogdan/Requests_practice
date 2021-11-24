@@ -7,17 +7,12 @@ from todo import Todo
 class User(Entity):
 
     def __init__(self, user_dict):
-        try:
-            self.user = {'id': user_dict['id'],
-                         'name': user_dict['name'],
-                         'email': user_dict['email'],
-                         'gender': user_dict['gender'],
-                         'status': user_dict['status']}
-        finally:
-            response = RequestsApi.post_request(user_dict, 'users')
-            self.user['id'] = response['data']['id']
-            self.posts = []
-            self.todos = []
+        response = RequestsApi.post_request(user_dict, 'users')
+        self.user = dict(id=user_dict['id'], name=user_dict['name'], email=user_dict['email'],
+                         gender=user_dict['gender'], status=user_dict['status'])
+        self.user['id'] = response['data']['id']
+        self.posts = []
+        self.todos = []
 
     def update_user(self):
         endpoint = f"users?id={self.user['id']}"

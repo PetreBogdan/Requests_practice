@@ -5,15 +5,11 @@ from apientity import Entity
 class Comment(Entity):
 
     def __init__(self, comment_dict):
-        try:
-            self.comment = {'id': comment_dict['id'],
-                            'post_id': comment_dict['post_id'],
-                            'name': comment_dict['name'],
-                            'email': comment_dict['email'],
-                            'body': comment_dict['body']}
-        finally:
-            response = RequestsApi.post_request(comment_dict, "comments")
-            self.comment['id'] = response['data']['id']
+        response = RequestsApi.post_request(comment_dict, "comments")
+        self.comment = dict(id=comment_dict['id'], post_id=comment_dict['post_id'], name=comment_dict['name'],
+                            email=comment_dict['email'], body=comment_dict['body'])
+
+        self.comment['id'] = response['data']['id']
 
     def update_comment(self):
         """

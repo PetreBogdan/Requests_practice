@@ -6,15 +6,11 @@ from apientity import Entity
 class Post(Entity):
 
     def __init__(self, post_dict):
-        try:
-            self.post = {'id': post_dict['id'],
-                         'user_id': post_dict['user_id'],
-                         'title': post_dict['title'],
-                         'body': post_dict['body']}
-        finally:
-            response = RequestsApi.post_request(post_dict, "posts")
-            self.post['id'] = response['data']['id']
-            self.comments = []
+        response = RequestsApi.post_request(post_dict, "posts")
+        self.post = dict(id=post_dict['id'], user_id=post_dict['user_id'], title=post_dict['title'],
+                         body=post_dict['body'])
+        self.post['id'] = response['data']['id']
+        self.comments = []
 
     def update_post(self):
         """

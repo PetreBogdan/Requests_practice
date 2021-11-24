@@ -15,7 +15,6 @@ if __name__ == '__main__':
     user1.modify_email('AppTest2@test.com')
     user1.display_user()
 
-
     todo_data = {"id": 4, "user_id": 4,
                  "title": "AppTodo",
                  "due_on": "13-06-2021 5:43:02 PM",

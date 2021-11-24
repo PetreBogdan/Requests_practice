@@ -7,15 +7,10 @@ import textwrap
 class Todo(Entity):
 
     def __init__(self, todo_dict):
-        try:
-            self.todo = {'id': todo_dict['id'],
-                         'user_id': todo_dict['user_id'],
-                         'title': todo_dict['title'],
-                         'due_on': Todo.format_date_in(todo_dict['due_on']),
-                         'status': todo_dict['status']}
-        finally:
-            response = RequestsApi.post_request(todo_dict, 'todos')
-            self.todo['id'] = response['data']['id']
+        response = RequestsApi.post_request(todo_dict, 'todos')
+        self.todo = dict(id=todo_dict['id'], user_id=todo_dict['user_id'], title=todo_dict['title'],
+                         due_on=Todo.format_date_in(todo_dict['due_on']), status=todo_dict['status'])
+        self.todo['id'] = response['data']['id']
 
     def update_todo(self):
         """
